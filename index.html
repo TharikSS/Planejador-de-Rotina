@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Planejador"><meta name="theme-color" content="#2563eb">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png">
+<title>Planejador</title>
+<style>
+:root{--bg:#fff;--tx:#1a1a1a;--mu:#777;--bd:#e5e5e5;--ac:#2563eb;--sf:#f5f5f4}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--tx:#f2f2f2;--mu:#999;--bd:#3a3a3c;--sf:#2c2c2e}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px -apple-system,system-ui,sans-serif;padding-top:env(safe-area-inset-top)}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px 4px}
+h1{font-size:24px;margin:0}h2{font-size:17px;font-weight:500;margin:8px 0}h3{font-size:15px;margin:14px 0 0}
+main{padding:8px 16px 150px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.lk{color:var(--ac);padding:8px}.red{color:#d33}
+.pri{background:var(--ac);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;margin-top:12px}
+.mut{color:var(--mu);font-size:12px}.sub{color:var(--mu);font-size:13px;margin:4px 0 6px}
+.bar{height:6px;border-radius:3px;background:var(--bd);margin-bottom:8px}.bar i{display:block;height:6px;border-radius:3px;background:var(--ac)}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:.5px solid var(--bd)}
+.ck{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--mu);flex:none;color:#fff;padding:0}
+.ck.on{background:var(--ac);border-color:var(--ac)}
+.tx{flex:1;min-width:0}.ti{font-size:15px}.dn{text-decoration:line-through;color:var(--mu)}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{display:flex;align-items:center;gap:6px;margin-top:2px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%}.dots{display:flex;gap:2px;height:6px;justify-content:center}.dots .dot{width:5px;height:5px}
+.fl{color:#d33}
+.nav{display:flex;justify-content:space-between;align-items:center}.nav button{font-size:28px;color:var(--ac);padding:0 12px}
+.strip,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:8px}
+.strip>div,.grid>div{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.cir{width:32px;height:32px;line-height:32px;border-radius:50%;font-weight:400;font-size:15px}
+.cir.on{background:var(--ac);color:#fff}.cir.td{color:var(--ac);font-weight:700}
+.hr{padding:12px 0;border-bottom:.5px solid var(--bd)}.bt{display:flex;justify-content:space-between;align-items:center}
+.hc{display:flex;gap:6px;align-items:center;margin-top:8px}.hc>div{display:flex;flex-direction:column;align-items:center;font-size:10px;color:var(--mu);cursor:pointer}
+.hd{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--mu);display:block}.hd.on{background:var(--ac);border-color:var(--ac)}
+#fab{position:fixed;right:20px;bottom:calc(76px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;background:var(--ac);color:#fff;font-size:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px #0004}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--bg);border-top:.5px solid var(--bd);padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;padding:14px 0;color:var(--mu)}nav button.on{color:var(--ac);font-weight:700}
+#warn{display:none;margin:4px 16px;padding:8px 12px;border-radius:8px;background:var(--sf);font-size:13px;cursor:pointer}
+#md{display:none;position:fixed;inset:0;background:#0006;z-index:9;overflow:auto}#md.open{display:block}
+.sheet{background:var(--bg);margin-top:max(env(safe-area-inset-top),20px);min-height:100%;padding:16px;border-radius:16px 16px 0 0}
+label{display:block;font-size:12px;color:var(--mu);margin:14px 0 6px}
+input,textarea,select{width:100%;font:inherit;color:inherit;background:var(--bg);border:.5px solid var(--mu);border-radius:8px;padding:10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:6px 12px;border:.5px solid var(--mu);border-radius:16px;font-size:14px}
+.chip.on{background:#2563eb22;border-color:var(--ac);color:var(--ac)}
+.act{display:flex;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap}
+</style></head>
+<body>
+<header><h1>Planejador</h1><button class="lk" onclick="bkp()">Backup</button></header>
+<div id="warn" onclick="bkp()">Faça um backup dos seus dados (toque aqui)</div>
+<main id="v"></main>
+<button id="fab" onclick="editT()" aria-label="Nova tarefa">+</button>
+<nav><button data-t="h" onclick="T('h')">Hoje</button><button data-t="s" onclick="T('s')">Semana</button><button data-t="m" onclick="T('m')">Mês</button><button data-t="b" onclick="T('b')">Hábitos</button></nav>
+<div id="md"></div>
+<script src="app.js"></script>
+</body></html>
